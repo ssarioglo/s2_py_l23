@@ -3,11 +3,14 @@ SHELL ["/bin/bash", "-c"]
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN apt update
+RUN apt -y install python3-pip python3-evdev python3-xlib python3-six
 RUN pip install --upgrade pip
-RUN apt update && apt -qy install libjpeg0dev libxslt-dev
+RUN pip install pynput
+
 RUN useradd -rms /bin/bash runner && chmod 777 /opt /run
 WORKDIR /runner
 COPY --chown=runner:runner . .
 
 USER runner
-CMD ["gunicorn", "-b", "0.0.0.0:8081", "soaqaz.wsgi.application"]
+CMD ["helicopter_game", "-it", "python3 main.py"]
